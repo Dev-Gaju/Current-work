@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Serving</title>
+     <style>
+        .btn {
+            background-image: linear-gradient(to right, #97FEED, #F09819);
+            color: #fff;
+            padding: 10px 17px;
+            font-size: 14px;
+            border: 2px solid;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 120px; /* Increased width */
+        }
+        .pred{
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Forest Cover Type Prediction</h1>
+    <button class="btn" onclick="displayInfo()">Index</button>
+    <div id="infoDisplay"></div><br>
+    <br>
+    <button class="btn" onclick="displayInfo1()">Version</button>
+    <div id="infoDisplay1"></div>
+    <br>
+    <h2>Predicted Endpoints-1:</h2>
+    <label for="dataInput">Enter data:</label>
+    <input type="text" id="dataInput" name="dataInput" required>
+    <input type="submit" value="Predict" onclick="predictResult()">
+    <!-- Display predicted results here -->
+    <p class="pred">Result(Top Classifier): <b><span id="predictedResultLight" style="font-size: 28px;"></span></b></p>
+<!--    second_prediction-->
+      <h2>Predicted Endpoints-2:</h2>
+    <label for="dataInput">Enter data:</label>
+    <input type="text" id="dataInputs" name="dataInputs" required>
+    <input type="submit" value="Predicts" onclick="predictResult1()">
+    <p class="pred">Result(2nd Best): <b><span id="predictedResultRA" style="font-size: 28px;"></span></b></p>
+    <!--    Third_prediction-->
+    <h2>Predicted Endpoints-3:</h2>
+    <label for="dataInput">Enter data:</label>
+    <input type="text" id="dataInputss" name="dataInputss" required>
+   <input type="submit" value="Predicts" onclick="predictResult2()">
+    <p class="pred">Result(Ensemble): <b><span id="predictedResultBlending" style="font-size: 28px;"></span></b></p>
+
+    <script>
+        // JavaScript to handle the form submission and update the predicted results
+        function predictResult() {
+            const data = document.getElementById('dataInput').value;
+            fetch('/predict1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictedResultLight').innerText = data.prediction;
+            })
+            .catch(error => {
+                // Handle any errors that may occur during prediction
+                console.error('Error:', error);
+            });
+        }
+
+        function predictResult1() {
+            const data = document.getElementById('dataInputs').value;
+            fetch('/predict2', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictedResultRA').innerText = data.prediction;
+            })
+            .catch(error => {
+                // Handle any errors that may occur during prediction
+                console.error('Error:', error);
+            });
+        }
+
+         function predictResult2() {
+            const data = document.getElementById('dataInputss').value;
+            fetch('/predict3', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('predictedResultBlending').innerText = data.prediction;
+            })
+            .catch(error => {
+                // Handle any errors that may occur during prediction
+                console.error('Error:', error);
+            });
+        }
+
+        function displayInfo() {
+            const info ="{{ version_info.app_name }}";
+            document.getElementById('infoDisplay').innerText = info;
+        }
+    function displayInfo1() {
+            const versionInfo = JSON.parse('{{ version_info|tojson }}');
+            const info = `App Name: ${versionInfo.app_name}\nVersion: ${versionInfo.version}`;
+            document.getElementById('infoDisplay1').innerText = info;
+        }
+    </script>
+</body>
+</html>
+
