@@ -1,0 +1,1 @@
+install python, pickle, pdfplumber, nltk, pandas, shutil
